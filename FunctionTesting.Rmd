@@ -155,7 +155,7 @@ Example 2 Output: Total Number
   return(df)
 }
 
-
+dclean.names(testing, "col")
 
 
   
@@ -169,7 +169,7 @@ d_rename <- function(df, x, row = FALSE, col = TRUE){
   }
   return(df)
 }  
-
-
+namet <-c(datet, numbert, datet2)
+d_rename(testing, namet, col = TRUE)
 ```
 
