@@ -1,0 +1,10 @@
+Package: datacl
+Type: Package
+Title: Data manipulation
+Version: 0.1
+Date: 2025-03-31
+Author: DeAndre Dunbar <deandredunbar456@gmail.com> [Deandre Dunbar, cre]
+Description: 
+    This package seek to help transform datasets in to a more clean state. this involves changing unreadable data format into a readable one in r. This packages aims to add a small list of functions that may help clean data sets found online. This package will focus on using dataframe data structure first.   
+License: CCO
+LazyData: true
