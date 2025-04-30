@@ -1,0 +1,175 @@
+---
+title: "Module 12"
+output: html_document
+date: "2025-04-14"
+---
+
+## Main Functions
+
+1.dclean function
+This function aims to elimate NA errors and faulty data. replacing the value to zero or an average of the data points.
+Example Input: 5,7,NA, 2,NA,9
+Example Output: 5,7,0,2,0,9
+```{r }
+
+dclean <- function(df, replace = NA, exchange = input){
+  
+   
+   for(colname in names(df)) {
+   column <- df[[colname]]
+   
+   if(is.na(replace)) {
+     input <- is.na(column)
+   } else{
+     input <- column == replace
+   }
+   
+   if(exchange == "AVG") {
+     numeric_change <- as.numeric(column)
+     output <- mean(numeric_change, na.rm = TRUE)
+   }else if(exchange == "MED"){
+     numeric_change <- as.numeric(column)
+     output <- median(numeric_change, na.rm = TRUE)
+   
+   } else { 
+      output <- exchange 
+      }
+   column[input] <- output
+   df[[colname]] <- column
+  
+}
+
+return(df)   
+   
+}
+
+air <- airquality
+
+
+air <- dclean(air, replace = NA, exchange = "AVG")
+
+```
+
+
+2. dformat function
+   This allows the to change the data format to something R can read and calulate with. This includes the date format and numbers separated by commas. 
+Example Input: 01/21/2000
+Example Output: 2000-21-01
+```{r }
+
+dformat<- function(df, format_type = input){
+format_type <- as.character(format_type)
+#regex patterns
+date.pattern <- "\\d{1,2}/\\d{1,2}/\\d{4}"
+date.pattern2 <- "\\b\\w+\\s+\\d{1,2}\\,\\s*\\d{4}\\b"
+num.pattern <- "\\d{1,3},\\d{3},\\d{3}" 
+
+    
+    
+   for(colname in names(df)) {
+   column <- as.character(df[[colname]])
+   
+  if(format_type == "date") {
+    dates <- grep(date.pattern, column)
+    dates_value <- as.Date(column[dates], format ="%m/%d/%y")
+    column[dates] <- format(dates_value, "%Y-%d-%m")
+    
+    dates2 <-grep(date.pattern2, column)
+    dates_value2 <- as.Date(column[dates2], format ="%B %d, %Y")
+    column[dates2] <- format(dates_value2, "%Y-%d-%m")
+    
+    }
+    
+   
+   
+   
+   
+  if(format_type == "number" ) {
+    numbers <- grep(num.pattern, column)
+  
+  column[numbers] <- gsub(",","",column[numbers])
+
+  
+  }
+  
+
+    df[[colname]] <- column
+    
+}
+   
+
+return(df)
+
+}
+
+
+datet2 <- c("march 10, 2019", "November 10, 2000")
+datet <- c("9/10/1999", "9/09/1982")
+numbert <- c("1,000,000", "2,000,000")
+testing <- data.frame(datet, numbert, datet2)
+
+dformat(testing, format_type = "date")
+
+testing
+```
+
+
+3.dclean.text function
+This function allows the users to be able clear up any unnecessary punctuations, special character and unnecessary space.
+Example Input: cash$@number
+Example Output: cash number
+```{r }
+
+dclean_text <- function(vector, input){
+  
+  vector <- gsub(input, "" , vector, fixed = TRUE)
+  vector <- gsub("[,.?/!@#$%^&`~]","",vector)
+  vector <- gsub("\\s+", "", vector)
+  
+  
+  return(vector)
+}
+
+messy <- read.csv("C:/Users/deand/Downloads/messy.csv")
+
+messy$Email<- dclean.text(messy$Email, "COM")
+```
+
+
+4. dclean.names & d.rename 
+These function allows allow for more control over the names of rows and columns in a dataframe. First function clean the existing names while the second rename the rows or columns the way you want to.
+
+Example 1 input: total.NUm
+Example 1 Output: total NUm
+Example 2 input: toTal Numz
+Example 2 Output: Total Number
+```{r, }
+
+
+  dclean_names <- function(df, remove) {
+  if (remove == "col") {
+    colnames(df) <- NULL
+  } else if (remove == "row") {
+    rownames(df) <- NULL
+}
+  return(df)
+}
+
+
+
+
+  
+d_rename <- function(df, x, row = FALSE, col = TRUE){
+  
+  if(row){
+  rownames(df) <- x
+  }
+  if(col){
+  colnames(df) <- x
+  }
+  return(df)
+}  
+
+
+```
+
